@@ -1,0 +1,40 @@
+package io.fruitbase.business.dto.member;
+
+import java.sql.Timestamp;
+
+public class TimeSearchCreationRequest {
+
+	
+	String time;
+	Timestamp timeStart;
+	Timestamp timeEnd;
+	
+	
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	
+	public Timestamp getTimein() {
+		return timeStart;
+	}
+	public void setTimein(Timestamp timein) {
+		this.timeStart = timein;
+	}
+	
+	
+	public Timestamp getTimeout() {
+		return timeEnd;
+	}
+	public void setTimeout(Timestamp timeout) {
+		this.timeEnd = timeout;
+	}
+	
+	
+	
+	
+	
+}

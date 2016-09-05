@@ -1,0 +1,33 @@
+package io.fruitbase.model.repos.username;
+
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import io.fruitbase.model.entities.login.User;
+
+
+@Repository
+public interface UserRepository extends JpaRepository<User,Integer>,UserRepositoryCustom {
+	@Query("SELECT u FROM User u WHERE u.username like %?1%")
+	User findByUsernameLike(String username);
+	
+
+	@Query("SELECT u.id,u.username,u.password,u.passwordConfirm FROM User u")
+	List<User> findByAll();
+	
+	
+	@Query("SELECT u.id,u.username,u.password,u.passwordConfirm FROM User u")
+	List<User> findByUser();
+	
+	
+//	@Query(" SELECT u.id,u.username,u.password,u.passwordConfirm"
+//			+ "from User as u"
+//			+ "JOIN user_role as us  ON u.id = us.user_id "
+//			+ "JOIN Role as R ON us.SensorID = R.id")
+//	List<User> findByUserRole();
+//	 
+}

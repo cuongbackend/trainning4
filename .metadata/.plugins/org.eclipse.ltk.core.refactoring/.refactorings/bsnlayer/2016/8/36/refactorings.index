@@ -1,0 +1,10 @@
+1472463654078	Delete element
+1472463760607	Delete element
+1472464420810	Delete element
+1472464426376	Delete element
+1472465339078	Move compilation units
+1472531450632	Convert local variable 'listMem' to field
+1472626096099	Rename type 'RegisterCreationRequest'
+1472627527596	Rename type 'SearchTimeCreationRequest'
+1472633043884	Rename field 'timein'
+1472633092476	Rename field 'timeout'

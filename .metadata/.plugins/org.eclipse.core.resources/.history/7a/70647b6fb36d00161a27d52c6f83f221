@@ -1,0 +1,118 @@
+package io.fruitbase.business.services.username;
+
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
+import io.fruitbase.business.services.dummy.dto.UserCreationRequest;
+import io.fruitbase.business.services.dummy.dto.UserRoleCreationRequest;
+//import io.fruitbase.business.services.dummy.dto.UserRoleCreationRequest;
+import io.fruitbase.model.entities.login.Role;
+import io.fruitbase.model.entities.login.User;
+import io.fruitbase.model.repos.role.RoleRepository;
+import io.fruitbase.model.repos.username.UserRepository;
+
+
+@Service
+public class UserServiceImpl implements UserService {
+
+	
+	@Autowired
+	private UserRepository dataUser;
+
+	
+	@Autowired
+	private RoleRepository dataRole;
+	
+	
+	@Override
+	public User create(UserCreationRequest request) {
+		User usernames = new User();
+		List<User> arrUser;
+		for(User username : arrUser){
+			
+		}
+		
+		//if(request.getUsername().equals(dataUser))
+		BeanUtils.copyProperties(request, usernames);
+		return dataUser.save(usernames);
+	}
+
+	
+	@Override
+	public User search(String username) {
+		return dataUser.findByUsernameLike(username);
+	}
+
+	
+	@Override
+	public List<User> list() {
+		return dataUser.findByUser();
+	}
+
+	
+	@Override
+	public User update(Integer id, UserCreationRequest request) {
+		User users;
+		users = dataUser.findOne(id);
+		BeanUtils.copyProperties(request, users);
+		return dataUser.save(users);
+	}
+
+	
+	@Override
+	public boolean delete(Integer id) {
+		dataUser.delete(id);
+		return true;
+	}
+
+	
+	@Override
+	public String login(UserCreationRequest request) {
+		List<User> arr = dataUser.findAll();
+		String erro = null;
+		for (User user : arr) {
+			if (request.getUsername().equals(user.getUsername())) {
+				if (request.getPassword().equals(user.getPassword())) {
+					erro = "Login successfully";
+				} else {
+					erro = "password erro";
+				}
+				break;
+			} else {
+				erro = "username erro";
+			}
+		}
+		return erro;
+	}
+
+
+	@Override
+	public String assign(UserRoleCreationRequest request) {
+		String erro = null;
+		List<User> arrUser = dataUser.findAll();
+		List<Role> arrRole = dataRole.findAll();
+		for(User user : arrUser){
+			if(request.getUsersId().equals(user.getId())){
+				for(Role role : arrRole){
+					if(request.getRolesId().equals(role.getId())){
+						User users = dataUser.findOne(request.getUsersId());
+						Role roles = dataRole.findOne(request.getRolesId());
+						users.getRoles().add(roles);
+						dataUser.save(users);
+						erro = "Successfully";
+						break;
+					}else{
+						erro = "Erro RoleID NULL";
+					}
+				}break;
+			}else{
+				erro = "Erro UserID NULL";
+			}
+		}
+		return erro;
+	}
+}

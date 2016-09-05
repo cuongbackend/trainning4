@@ -1,0 +1,124 @@
+package io.fruitbase.api.rest.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import io.fruitbase.business.dto.ResponseObject;
+import io.fruitbase.business.services.dummy.dto.UserCreationRequest;
+import io.fruitbase.business.services.dummy.dto.UserRoleCreationRequest;
+import io.fruitbase.business.services.role.RoleService;
+import io.fruitbase.business.services.username.UserService;
+import io.fruitbase.model.entities.login.Role;
+import io.fruitbase.model.entities.login.User;
+
+
+@Controller
+@RequestMapping(value = "/username")
+public class UserController {
+	
+	
+	@Autowired 
+	private UserService dataUser;
+	
+	
+	@Autowired
+	private RoleService dataRole;
+	
+	
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> create(@RequestBody UserCreationRequest request){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		User usernames = dataUser.create(request);
+		response.setResponseData(usernames);
+		return new ResponseEntity<Object>(response, new HttpHeaders(),HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> search(@RequestParam(value = "k", required = true) String username){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		User usernames = dataUser.search(username);
+		response.setResponseData(usernames);
+		return new ResponseEntity<Object>(response,new HttpHeaders(),HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> list(){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<User> users = dataUser.list();
+		response.setResponseData(users);
+		return new ResponseEntity<Object>(response, new HttpHeaders(),HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@ResponseBody
+	public final ResponseEntity<Object> update(@PathVariable Integer id,@RequestBody UserCreationRequest request){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		User users = dataUser.update(id, request);
+		response.setResponseData(users);
+		return new ResponseEntity<Object>(response,new HttpHeaders(),HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public final ResponseEntity<Object> delete(@PathVariable Integer id){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		boolean isSucces = dataUser.delete(id);
+		response.setResponseData(isSucces);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/login",method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> login(@RequestBody UserCreationRequest request){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataUser.login(request);
+		response.setResponseData(erro);
+		return new ResponseEntity<Object>(response,new HttpHeaders(),HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/login/data", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> RoleData(@RequestBody UserCreationRequest request){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataUser.login(request);
+		List<Role> roles = null;
+		if(erro == "Login successfully"){
+			roles = dataRole.list();
+		}
+		response.setResponseData(roles);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/asign", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> asign(@RequestBody UserRoleCreationRequest request){
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataUser.assign(request);
+		response.setResponseData("thanh cong",erro);
+		return new ResponseEntity<Object>(response,new HttpHeaders(), HttpStatus.OK);	
+	}
+	
+	
+	
+}

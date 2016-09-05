@@ -1,0 +1,227 @@
+package io.fruitbase.api.rest.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import io.fruitbase.business.dto.member.MemberCreationRequest;
+import io.fruitbase.business.dto.member.ResponseObject;
+import io.fruitbase.business.dto.member.TimeSearchCreationRequest;
+import io.fruitbase.business.services.member.MemberService;
+import io.fruitbase.model.entities.member.Member;
+
+
+@Controller
+@RequestMapping(value = "/member")
+public class MemberController {
+
+	
+	@Autowired
+	private MemberService dataMember;
+
+	/**
+	 * @question1: Register api
+	 * @method: POST 
+	 * @param request
+	 * @return String 
+	 * {@value: { "firstName": "Nguyen Manh",
+	 *  		  "lastName":"Cuong",
+	 *  		  "email": "cuongnm22@wru.vn",
+	 *  		  "password": "123456",
+	 *         	  "address": "Ha Noi"
+	 *          }
+	 * }
+	 * {@link: http://localhost:7071/fruitbase/member/register}
+	 */
+
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> register(@RequestBody MemberCreationRequest request) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataMember.register(request);
+		response.setResponseData(erro);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @question2: Login api
+	 * @method: POST
+	 * @param request
+	 * @return String
+	 *  {@value 
+	 * 		{ 
+	 * 		   "email": "cuongnm22@wru.vn",
+	 * 		   "password":"123456"
+	 * 		 }
+	 *	 }
+	 * {@link: http://localhost:7071/fruitbase/member/login}
+	 */
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> login(@RequestBody MemberCreationRequest request) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataMember.login(request);
+		response.setResponseData(erro);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @question3: Activate member api
+	 * @method: POST
+	 * @param request
+	 * @return String
+	 * {@value
+	 * 	{
+	 *  	"email":"cuongnm22@wru.vn",
+	 *  	 "code": "8913"
+	 *   }
+	 * }
+	 * @method POST
+	 */
+
+	@RequestMapping(value = "/activate", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> activate(@RequestBody MemberCreationRequest request) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		String erro = dataMember.activate(request);
+		response.setResponseData(erro);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @question4 List members api
+	 * @question4.1	List all member
+	 * @question4.3 List by keyword
+	 * @from1	Method: GET
+	 * @param	Listbykeyword(?k=address or k=email....or c = code)
+	 * @return List<Member>
+	 * {@link: http://localhost:7071/fruitbase/member/listAll/addessAndStatuss}
+	 */
+
+	@RequestMapping(value = "/listAll", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> listAll(
+			@RequestParam(value = "k", required = false) String keyword,
+			@RequestParam(value = "c", required = false) Integer code) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> members = ((StringUtils.isEmpty(keyword)) && (StringUtils.isEmpty(code))) ? dataMember.listAll()
+				: dataMember.listByKeywords(keyword, code);
+		response.setResponseData(members);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @question4.3 List by keyword
+	 * @from2 Method POST
+	 * @param request
+	 * @return List<Member>
+	 *  {@value 
+	 *  	{
+	 *  	   "firstName": "Nguyen Manh"
+	 *  	   or
+	 *  	   "lastName":"Cuong"
+	 *  	   or
+	 *  	   "email":"cuongnm22"
+	 *  	   or
+	 *  	   "status":"0"
+	 *  	   or
+	 *  	   "address":"Ha Noi"
+	 *  	   or 
+	 *  	   "registrationTime":"1472528818000"
+	 *  	   or
+	 *         "approvalTime": "1472528818000"
+	 *         or
+	 *         "code": "123"
+	 *       }
+	 * }
+	 *{@link: http://localhost:7071/fruitbase/member/listAll}
+	 */
+
+	@RequestMapping(value = "/listAll", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> listByKeyword(@RequestBody MemberCreationRequest request) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> member = dataMember.listByKeyword(request);
+		response.setResponseData(member);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @question4.3	findByStatusAndAddress
+	 * @method GET
+	 * @param value(String address and String Status)
+	 * @return List<Member>
+	 * {@link:	http://localhost:7071/fruitbase/member/listAll/addessAndStatus}
+	 */
+
+	@RequestMapping(value = "/listAll/addessAndStatus", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> listByStatusAdress(
+			@RequestParam(value = "status") String status,
+			@RequestParam(value = "address") String address) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> members = dataMember.listByStatusAdress(status, address);
+		response.setResponseData(members);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @param request
+	 * @return {@link: http://localhost:7071/fruitbase/member/listAll/time}
+	 */
+
+	@RequestMapping(value = "/listAll/time", method = RequestMethod.POST)
+	@ResponseBody
+	public final ResponseEntity<Object> listTime(@RequestBody TimeSearchCreationRequest request) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> member = dataMember.listTimes(request);
+		response.setResponseData(member);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * @param id
+	 * @return Member {@link: http://localhost:7071/fruitbase/member/listAll/id}
+	 */
+
+	@RequestMapping(value = "/listAll/id", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> viewMemberDetails(@RequestParam(value = "k", required = true) Integer id) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		Member members = dataMember.viewMemberDetails(id);
+		response.setResponseData(members);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	
+	@RequestMapping(value = "/listAll/time", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> searchTime(@RequestParam(value = "time", required = false) String time) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> members = dataMember.listTime(time);
+		response.setResponseData(members);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/listAll/timeToTime", method = RequestMethod.GET)
+	@ResponseBody
+	public final ResponseEntity<Object> searchTimeToTime(@RequestParam(value = "fromDate", required = true) long fromDate,
+												   @RequestParam(value = "toDate", required = true) long toDate) {
+		ResponseObject<Object> response = new ResponseObject<Object>();
+		List<Member> members = dataMember.listTimeToTime(fromDate, toDate);
+		response.setResponseData(members);
+		return new ResponseEntity<Object>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+}

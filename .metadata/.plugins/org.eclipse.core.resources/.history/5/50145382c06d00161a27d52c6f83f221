@@ -1,0 +1,10 @@
+package io.fruitbase.model.entities.register;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "register")
+public class Register {
+
+}

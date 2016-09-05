@@ -1,0 +1,68 @@
+package io.fruitbase.model.repos.member;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import io.fruitbase.model.entities.member.Member;
+import java.lang.String;
+
+
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Integer>, MemberRepositoryCustom {
+	
+	
+	Member findByEmail(String email);
+	
+	
+	@Query("select m from Member m where m.status = ?1 or m.address = ?1")
+	List<Member> findByStatusOrAddress(String value);
+	
+	
+	List<Member> findByStatus(String status);
+	
+	
+	@Query("select m from Member m where m.address like %?1%")
+	List<Member> findByAddressLike(String address);
+
+	
+	List<Member> findByAddress(String address);
+	
+	
+	List<Member> findByCode(Integer code);
+	
+	
+	List<Member> findByFirstName(String firstName);
+	
+	
+	List<Member> findByLastName(String lastname);
+	
+	
+	@Query("select m from Member m where m.registrationTime BETWEEN TIMESTAMPADD(HOUR, -5, NOW()) AND NOW()")
+	List<Member> findByHaflTime();
+	
+	
+	@Query("select m from Member m where m.registrationTime BETWEEN TIMESTAMPADD(HOUR, -24, NOW()) AND NOW()")
+	List<Member> findByDayTime();
+	
+	
+	@Query("select m from Member m where m.registrationTime BETWEEN TIMESTAMPADD(HOUR, -168, NOW()) AND NOW()")
+	List<Member> findByWeekTime();
+	
+	
+	@Query("select m from Member m where m.registrationTime BETWEEN TIMESTAMPADD(HOUR, -720, NOW()) AND NOW()")
+	List<Member> findByMonthTime();
+	
+	
+	@Query("select m from Member m where m.registrationTime BETWEEN UNIX_TIMESTAMP(?1) AND UNIX_TIMESTAMP(?2)")
+	List<Member> findByRegistrationTim(Timestamp timein, Timestamp timeout);
+	
+	
+	@Query("select m from Member m where m.address = ?1 or m.email = ?2 or m.code = ?3 or m.id = ?4 or m.lastName = ?5 or m.firstName = ?6 or m.registrationTime = ?7 or m.approvalTime = ?8")
+	List<Member> findByKeyword(String address, String email, Integer code, String status, String lastName, String firstName, Timestamp registrationTime, Timestamp approvalTime);
+	
+	
+}

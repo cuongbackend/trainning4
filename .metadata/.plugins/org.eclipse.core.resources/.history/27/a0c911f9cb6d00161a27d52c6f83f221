@@ -1,0 +1,140 @@
+package io.fruitbase.model.entities.member;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.sun.jmx.snmp.Timestamp;
+
+@Entity
+@Table(name = "member")
+public class Member {
+
+	
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String password;
+	private String status;
+	private String address;
+	private Timestamp registrationTime;
+	private Timestamp approvalTime;
+	private String code;
+	
+	
+	public Member() {
+		
+	}
+
+
+	public Member(String firstName, String lastName, String email, String password, String status, String address,
+			Timestamp registrationTime, Timestamp approvalTime, String code) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.status = status;
+		this.address = address;
+		this.registrationTime = registrationTime;
+		this.approvalTime = approvalTime;
+		this.code = code;
+		
+	}
+
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	@Column(name = "first_name", nullable = false, length = 50)
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+	@Column(name = "last_Name", nullable = false, length = 50)
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+	@Column(name = "email", nullable = false, length = 50)
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	@Column(name = "password", nullable = false, length = 50)
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	@Column(name = "status", nullable = false, length = 50)
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	@Column(name = "address", nullable = false, length = 100)
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	@Column(name = "registration_time", nullable = false, length = 100)
+	public Timestamp getRegistrationTime() {
+		return registrationTime;
+	}
+	public void setRegistrationTime(Timestamp registrationTime) {
+		this.registrationTime = registrationTime;
+	}
+
+
+	@Column(name = "approval_time")
+	public Timestamp getApprovalTime() {
+		return approvalTime;
+	}
+	public void setApprovalTime(Timestamp approvalTime) {
+		this.approvalTime = approvalTime;
+	}
+
+
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+}

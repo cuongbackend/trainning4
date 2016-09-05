@@ -1,0 +1,238 @@
+package io.fruitbase.business.services.member;
+
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.Random;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import io.fruitbase.business.dto.member.MemberCreationRequest;
+import io.fruitbase.business.dto.member.TimeSearchCreationRequest;
+import io.fruitbase.model.entities.member.Member;
+import io.fruitbase.model.repos.member.MemberRepository;
+
+
+/**
+ * 
+ * @author ManhCuong
+ *
+ */
+
+
+@Service
+public class MemberServiceImpl implements MemberService {
+
+	
+	@Autowired
+	private MemberRepository dataMember;
+	
+	
+	@Override
+	public String register(MemberCreationRequest request) {
+		String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		Boolean b = request.getEmail().matches(EMAIL_REGEX);
+		String message = null;
+		Integer k = 0;
+		Member member = new Member();
+		//email exists check
+		try {
+			Member mem = dataMember.findByEmail(request.getEmail());
+			mem.getEmail();
+			message =  "error email exists";
+		} catch (Exception ex) {
+			k=3;
+		}
+		//get current date time with TimeStamp())
+		java.util.Date date = new java.util.Date();
+		Timestamp m = new Timestamp(date.getTime());
+		//get random
+		Random randomno = new Random();
+		Integer random = randomno.nextInt(10000);
+		
+		request.setRegistrationTime(m);
+		request.setCode(random);
+		request.setStatus("0");
+		//check request client
+		if (request.getAddress().isEmpty()) {
+			message = "Please enter a address";
+			k = 2;
+		}else if (request.getEmail().isEmpty()) {
+			message = "Please enter an email address";
+			k = 2;
+		}else if (request.getFirstName().isEmpty()) {
+			message = "Please enter first name";
+			k = 2;
+		}else if (request.getLastName().isEmpty()) {
+			message = "Please enter last name";
+			k = 2;
+		}else if (request.getPassword().isEmpty()) {
+			message = "Please enter password";
+			k = 2;
+		}else if (b == false){
+			message = "Please enter a valid email address(email@domain.com)";
+			k = 2;
+		}	
+		// save register database
+		if (k != 2 && k == 3) {
+			BeanUtils.copyProperties(request, member);
+			dataMember.save(member);
+			message = "Sign Up Success";
+		}
+		return message;
+	}
+
+	
+	@Override
+	public String login(MemberCreationRequest request) {
+		String message = null;
+		Member member = dataMember.findByEmail(request.getEmail());
+		try{
+			String status = member.getStatus();
+			String password = member.getPassword();
+			if(request.getPassword().equals(password)){
+				if(status.equals("1")){
+					message = "Login successfully";
+				}else{
+					message = "Error: You need to Activate";
+				}
+			}else{
+				message = "Error: Invalid password";
+			}
+			
+		}catch (Exception e) {
+			message = "Error: Invalid emaii";
+		}
+		return message;
+	}
+
+	
+	@Override
+	public String activate(MemberCreationRequest request) {
+		String message = null;
+		Member member = dataMember.findByEmail(request.getEmail());
+		try{
+			if(member.getStatus().equals("0")){
+				if(member.getCode() == request.getCode()){
+					member.setStatus("1");
+					java.util.Date date = new java.util.Date();
+					Timestamp m = new Timestamp(date.getTime());
+					member.setApprovalTime(m);
+					message = "Activate succesfully";
+					dataMember.save(member);
+				}else{
+					message = "Activate code erro,please try again";
+				}
+			}else{
+				message = "you did it";
+			}
+		}catch (Exception e) {
+			message = "Error: Invalid email";
+		}
+
+		return message;
+	}
+
+	
+	@Override
+	public List<Member> listAll() {
+		List<Member> listMember = dataMember.findAll();
+		for (Member members : listMember) {
+			members.setPassword("********");
+		}
+		return listMember;
+	}
+
+	
+	@Override
+	public List<Member> listByStatusAdress(String status, String address) {
+		List<Member> listMember = dataMember.findByStatusAndAddress(status, address);
+		for (Member member : listMember) {
+			member.setPassword("******");
+		}
+		return listMember;
+	}
+
+	
+	@Override
+	public Member viewMemberDetails(Integer id) {
+		Member member = dataMember.findOne(id);
+		member.setPassword("******");
+		return member;
+	}
+
+	
+	@Override
+	public List<Member> listTimes(TimeSearchCreationRequest request) {
+		List<Member> listMember = null;
+		if (request.getTime().equals("last12hours")) {
+			listMember = dataMember.findByHaflTime();
+		} else if (request.getTime().equals("last24hours")) {
+			listMember = dataMember.findByDayTime();
+		} else if (request.getTime().equals("lastweek")) {
+			listMember = dataMember.findByWeekTime();
+		} else if (request.getTime().equals("lastmonth")) {
+			listMember = dataMember.findByMonthTime();
+		} else if (request.getTime().contains("")) {
+			listMember = dataMember.findByRegistrationTimeBetween(request.getFromDate(), request.getToDate());
+		}
+		for (Member member : listMember) {
+			member.setPassword("******");
+		}
+		return listMember;
+	}
+
+	
+	@Override
+	public List<Member> listByKeyword(MemberCreationRequest request) {
+		List<Member> listMember = null;
+		listMember = dataMember.findByKeyword(request.getAddress(), request.getEmail(), request.getCode(),
+				request.getStatus(), request.getLastName(), request.getFirstName(), request.getRegistrationTime(),
+				request.getApprovalTime());
+		for (Member member : listMember) {
+			member.setPassword("*******");
+		}
+		return listMember;
+	}
+
+	
+	@Override
+	public List<Member> listByKeywords(String keyword, Integer code) {
+		String address = keyword;
+		String email = keyword;
+		Integer codes = code;
+		String status = keyword;
+		String lastName = keyword;
+		String firstName = keyword;
+		List<Member> listMember = dataMember.findByKey(address, email, status, lastName, firstName, codes);
+		return listMember;
+	}
+
+	
+	@Override
+	public List<Member> listTime(String time) {
+		List<Member> listMember = null;
+		if (time.contains("last12hours")) {
+			listMember = dataMember.findByHaflTime();
+		} else if (time.contains("last24hours")) {
+			listMember = dataMember.findByDayTime();
+		} else if (time.contains("lastweek")) {
+			listMember = dataMember.findByWeekTime();
+		} else if (time.contains("lastmonth")) {
+			listMember = dataMember.findByMonthTime();
+		}
+		return listMember;
+	}
+
+	
+	@Override
+	public List<Member> listTimeToTime(long fromDate, long toDate) {
+		Timestamp fromTime = new Timestamp(fromDate);
+		Timestamp toTime = new Timestamp(toDate);
+		List<Member> listMember = dataMember.findByRegistrationTimeBetween(fromTime, toTime);
+		return listMember;
+	}
+	
+	
+}

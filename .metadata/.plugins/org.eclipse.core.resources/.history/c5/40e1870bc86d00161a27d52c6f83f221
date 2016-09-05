@@ -1,0 +1,11 @@
+package io.fruitbase.model.entities.member;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "address")
+public class Address {
+
+}

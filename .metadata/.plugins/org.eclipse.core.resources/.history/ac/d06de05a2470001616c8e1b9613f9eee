@@ -1,0 +1,136 @@
+package io.fruitbase.business.services.member;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import io.fruitbase.business.dto.member.MemberCreationRequest;
+import io.fruitbase.business.dto.member.TimeSearchCreationRequest;
+import io.fruitbase.model.entities.member.Member;
+
+/**
+ * 
+ * @author ManhCuong
+ *
+ */
+
+@Service
+public interface MemberService {
+
+	/**
+	 * @question: Register api 
+	 * @param request("firstName,lastName,email,password,address")
+	 * @return  register succesfully
+	 * @return Erro address null
+	 * @return Erro frist name null
+	 * @return Erro last name null
+	 * @return Erro password null
+	 * @return Erro email exists 
+	 * {@link: http://localhost:7071/fruitbase/member/register}
+	 */
+	
+	String register(MemberCreationRequest request); 
+	
+	/**
+	 * @question: Login api
+	 * @param request("email,password")
+	 * @return Login successfully
+	 * @return "Erro: You need to Activate"
+	 * @return Erro: password invalid
+	 * @return Erro: email invalid
+	 * {@link: http://localhost:7071/fruitbase/member/link}
+	 */
+	
+	String login(MemberCreationRequest request);
+	
+	/**
+	 * @question: Activate member api
+	 * @param request("email,code")
+	 * @return Activate succesfully
+	 * @return Activate code erro,please try again
+	 * @return you did it
+	 * @return Erro: email invalid
+	 * {@link: http://localhost:7071/fruitbase/member/activate}
+	 */
+	
+	String activate(MemberCreationRequest request);
+	
+	/**
+	 * question: List members ap(ListAll)
+	 * @return List<Member>
+	 * {@link: http://localhost:7071/fruitbase/member/listAll}
+	 */
+
+	List<Member> listAll();
+	
+	/**
+	 * @question: List members api(ListByKeyword)
+	 * from 1: by method: GET
+	 * @param keyword(k?'firstName' or 'lastName' or 'email' or 'status' or 'address')
+	 * OR
+	 * @param keyword(c?'code')
+	 * @return List<Member>
+	 * 
+	 */
+	
+	List<Member> listByKeywords(String keyword, Integer code);
+	
+	/**
+	 * @question: List members api(ListByKeyword)
+	 * from 2: by method: POST
+	 * @param request("'firstName' or 'lastName' or 'email' or 'status' or 'address' or 'registrationTime' or 'approvalTime' or 'code'")
+	 * @return List<Member>
+	 * {@link: http://localhost:7071/fruitbase/member/listAll/keyword}
+	 */
+	
+	List<Member> listByKeyword(MemberCreationRequest request);
+	
+	/**
+	 * @question: List members api(List by filter by status, address)
+	 * @method GET
+	 * @param value(status and address)
+	 * @return List<Member>
+	 * {@link: http://localhost:7071/fruitbase/member/listAll/addessAndStatus}
+	 */
+	
+	List<Member> listByStatusAdress(String status, String address);
+
+	/**
+	 * @question: List all members who register in a time range
+	 * @question: (last 12 hours, last 24 hours, last week, last month)
+	 * @From 1: Method = GET
+	 * @param (K = last12hours or k = last24hours or k = lastweek or k = lastmonth)
+	 * @return List<Member>
+	 */
+	
+	List<Member> listTime(String time);
+	
+	/**
+	 * @question:List all members who register in a time range (last 12 hours, last 24 hours, last week, last month or from dd/mm/yyyy to dd/mm/yyyy)
+	 * @from2: method = POST 
+	 * @param request('time','timein','timeout')
+	 * @return List<Member>
+	 * {@link: http://localhost:7071/fruitbase/member/listAll/time}
+	 */
+	
+	List<Member> listTimeToTime(long fromDate, long toDate);
+
+	/**
+	 * @question:List all member register(from dd/mm/yyyy to dd/mm/yyyy)
+	 * @method: GET
+	 * @param request
+	 * @return
+	 */
+	
+	List<Member> listTimes(TimeSearchCreationRequest request);
+	
+	/**
+	 * @param id
+	 * @return Member
+	 * {@link: http://localhost:7071/fruitbase/member/listAll/id}
+	 */
+	
+	Member viewMemberDetails(Integer id);
+	
+		
+}

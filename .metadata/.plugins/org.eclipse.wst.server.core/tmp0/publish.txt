@@ -1,0 +1,6 @@
+#Tomcat publish data
+#Mon Sep 05 09:35:47 ICT 2016
+org.eclipse.jst.j2ee.server\:bsnlayer=E\:\\jmango\\sts-bundle\\pivotal-tc-server-developer-3.1.5.RELEASE\\base-instance\\wtpwebapps\\apilayer\\WEB-INF\\lib\\bsnlayer.jar
+org.eclipse.jst.j2ee.server\:dtlayer=E\:\\jmango\\sts-bundle\\pivotal-tc-server-developer-3.1.5.RELEASE\\base-instance\\wtpwebapps\\apilayer\\WEB-INF\\lib\\dtlayer.jar
+org.eclipse.jst.j2ee.server\:/binary\:C\:\\Users\\ManhCuong\\.gradle\\caches\\modules-2\\files-2.1\\org.springframework\\spring-web\\4.1.6.RELEASE\\960101b25d0ec6f45d550bf92c00de8c6a584e6a\\spring-web-4.1.6.RELEASE.jar=E\:\\jmango\\sts-bundle\\pivotal-tc-server-developer-3.1.5.RELEASE\\base-instance\\wtpwebapps\\apilayer\\WEB-INF\\lib\\spring-web-4.1.6.RELEASE.jar
+org.eclipse.jst.j2ee.server\:apilayer=E\:\\jmango\\sts-bundle\\pivotal-tc-server-developer-3.1.5.RELEASE\\base-instance\\wtpwebapps\\apilayer

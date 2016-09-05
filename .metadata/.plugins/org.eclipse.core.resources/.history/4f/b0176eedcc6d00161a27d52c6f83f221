@@ -1,0 +1,5 @@
+package io.fruitbase.business.dto.member;
+
+public class Register {
+	
+}

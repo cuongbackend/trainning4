@@ -1,0 +1,25 @@
+package io.fruitbase.model.entities.register;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "register")
+public class Register {
+
+	
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String password;
+	private String passwordConfirm;
+	
+	
+	public Register() {
+
+	}
+
+	
+	
+}

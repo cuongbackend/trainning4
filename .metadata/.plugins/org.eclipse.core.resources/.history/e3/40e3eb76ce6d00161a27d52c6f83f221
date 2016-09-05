@@ -1,0 +1,15 @@
+package io.fruitbase.business.services.member;
+
+public class Snippet {
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	private String email;
+	private String password;
+	private String status;
+	private String address;
+	private Timestamp registrationTime;
+	private Timestamp approvalTime;
+	private String code;
+}
+
